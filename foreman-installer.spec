@@ -17,12 +17,12 @@
 Name:       foreman-installer
 Epoch:      1
 Version:    1.2.9999
-Release:    0.1%{?dotalphatag:""}%{?dist}
+Release:    1%{?dotalphatag}%{?dist}
 Summary:    Puppet-based installer for The Foreman
 Group:      Applications/System
 License:    GPLv3+ and ASL 2.0
 URL:        http://theforeman.org
-Source0:    %{name}-%{version}%{?dashalphatag:""}.tar.gz
+Source0:    %{name}-%{version}%{?dashalphatag}.tar.gz
 
 %if 0%{?rhel} && 0%{?rhel} == 5
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -73,5 +73,5 @@ cp -dpR * %{buildroot}/%{_datadir}/%{name}
 %endif
 
 %changelog
-* Wed May 23 2013 Lukas Zapletal <lzap+rpm[@]redhat.com> - 1.2.0-RC1
+* Wed May 23 2013 Lukas Zapletal <lzap+rpm[@]redhat.com> - 1.2.9999-1
 - initial version
