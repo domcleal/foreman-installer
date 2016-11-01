@@ -12,7 +12,7 @@ addons:
 matrix:
   fast_finish: true
   include:
-  - rvm: 2.1.0
+  - rvm: 2.1.7
     env: PUPPET_VERSION=3.5
     script:
       #
@@ -30,7 +30,7 @@ matrix:
       - bundle exec rake install PREFIX=$INSTDIR
       - "! find $INSTDIR -type f | xargs grep $INSTDIR"
       - "! find $INSTDIR -type l -printf '%P: ' -exec readlink {} \\; | grep $INSTDIR"
-  - rvm: 2.1.0
+  - rvm: 2.1.7
     env: PUPPET_VERSION=3.5
     services: docker
     sudo: required
