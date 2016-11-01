@@ -8,22 +8,35 @@ addons:
     - xsltproc
     - docbook-xsl
     - ca-certificates
-rvm: 2.1.0
-env:
-  - PUPPET_VERSION=3.5
-script:
-  #
-  # Test basic installer configuration works
-  #
-  - INSTDIR=$(mktemp -d)
-  - bundle exec rake build install PREFIX=$INSTDIR
-  - bundle exec $INSTDIR/sbin/foreman-installer --help
-  #
-  # Test separate build/installation steps with different prefixes
-  # No references to INSTDIR should be present when built with PREFIX=/
-  #
-  - bundle exec rake clean build PREFIX=/ SYSCONFDIR=/etc
-  - INSTDIR=$(mktemp -d)
-  - bundle exec rake install PREFIX=$INSTDIR
-  - "! find $INSTDIR -type f | xargs grep $INSTDIR"
-  - "! find $INSTDIR -type l -printf '%P: ' -exec readlink {} \\; | grep $INSTDIR"
+
+matrix:
+  fast_finish: true
+  include:
+  - rvm: 2.1.0
+    env: PUPPET_VERSION=3.5
+    script:
+      #
+      # Test basic installer configuration works
+      #
+      - INSTDIR=$(mktemp -d)
+      - bundle exec rake build install PREFIX=$INSTDIR
+      - bundle exec $INSTDIR/sbin/foreman-installer --help
+      #
+      # Test separate build/installation steps with different prefixes
+      # No references to INSTDIR should be present when built with PREFIX=/
+      #
+      - bundle exec rake clean build PREFIX=/ SYSCONFDIR=/etc
+      - INSTDIR=$(mktemp -d)
+      - bundle exec rake install PREFIX=$INSTDIR
+      - "! find $INSTDIR -type f | xargs grep $INSTDIR"
+      - "! find $INSTDIR -type l -printf '%P: ' -exec readlink {} \\; | grep $INSTDIR"
+  - services: docker
+    sudo: required
+    before_install:
+      - bundle exec rake clean build PREFIX=/srv/foreman-installer
+      - bundle exec rake install PREFIX=$PWD/_install
+      - docker build -t theforeman/foreman-installer .travis
+    script:
+      - "! find $PWD/_install -type f | xargs grep $PWD"
+      - "! find $PWD/_install -type l -printf '%P: ' -exec readlink {} \\; | grep $PWD"
+      - docker run -v $PWD/_install:/srv/foreman-installer theforeman/foreman-installer -c "/srv/foreman-installer/sbin/foreman-installer -nv"
