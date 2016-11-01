@@ -32,7 +32,7 @@ matrix:
       - "! find $INSTDIR -type l -printf '%P: ' -exec readlink {} \\; | grep $INSTDIR"
   - services: docker
     sudo: required
-    before_install:
+    before_script:
       - bundle exec rake clean build PREFIX=/srv/foreman-installer
       - bundle exec rake install PREFIX=$PWD/_install
       - docker build -t theforeman/foreman-installer .travis
