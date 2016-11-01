@@ -30,13 +30,13 @@ matrix:
       - bundle exec rake install PREFIX=$INSTDIR
       - "! find $INSTDIR -type f | xargs grep $INSTDIR"
       - "! find $INSTDIR -type l -printf '%P: ' -exec readlink {} \\; | grep $INSTDIR"
-  - services: docker
+  - rvm: 2.1.0
+    env: PUPPET_VERSION=3.5
+    services: docker
     sudo: required
     before_script:
       - bundle exec rake clean build PREFIX=/srv/foreman-installer
       - bundle exec rake install PREFIX=$PWD/_install
       - docker build -t theforeman/foreman-installer .travis
     script:
-      - "! find $PWD/_install -type f | xargs grep $PWD"
-      - "! find $PWD/_install -type l -printf '%P: ' -exec readlink {} \\; | grep $PWD"
       - docker run -v $PWD/_install:/srv/foreman-installer theforeman/foreman-installer -c "/srv/foreman-installer/sbin/foreman-installer -nv"
