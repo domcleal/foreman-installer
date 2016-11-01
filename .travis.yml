@@ -17,5 +17,5 @@ script:
   - bundle exec rake install PREFIX=$INSTDIR
   - bundle exec $INSTDIR/sbin/foreman-installer --help
   # No references to INSTDIR should be present when built with PREFIX=/
-  - grep -rv $INSTDIR $INSTDIR
+  - ! grep -r $INSTDIR $INSTDIR
   - "find $INSTDIR -type l -printf '%P: ' -exec readlink {} \\; | grep -v $INSTDIR"
