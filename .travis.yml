@@ -39,4 +39,4 @@ matrix:
       - bundle exec rake install PREFIX=$PWD/_install
       - docker build -t theforeman/foreman-installer .travis
     script:
-      - docker run -v $PWD/_install:/srv/foreman-installer theforeman/foreman-installer -c "/srv/foreman-installer/sbin/foreman-installer -nv"
+      - docker run -v $PWD/_install:/srv/foreman-installer theforeman/foreman-installer /srv/foreman-installer/sbin/foreman-installer -nv
